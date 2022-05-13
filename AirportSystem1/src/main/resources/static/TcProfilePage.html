@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		.content {
+			max-width: 500px;
+			margin: auto;
+		}
+
+		.header-class {
+			background-color: gainsboro;
+			height: 80px;
+			color: blueviolet;
+			text-emphasis: 100px;
+			font-size: 35px;
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header-class">
+		<em><strong>ONLINE AIRPORT SYSTEM</strong></em>
+
+	</div>
+	<div class="content">
+		<h3>TRAFFIC CONTROLLER PROFILE PAGE</h3>
+
+		<div>
+			<br>
+			<button onclick="window.location.href='http://localhost:8080/tc.html';" type="button">Home</button>
+			<input type="button" value="Logout" onclick="getConfirmation();" /><br>
+			<br>
+			<hr>
+
+
+			<h2>My Profile</h2>
+
+			<h3>First Name: <span id="f_name"></span> </h3>
+			<h3>Middle Name: <span id="m_name"></span></h3>
+			<h3>Last Name: <span id="l_name"></span></h3>
+			<h3>DOB: <span id="e_dob"></span></h3>
+			<h3>Role: <span id="e_role"></span></h3>
+
+
+		</div>
+		<hr>
+
+
+	</div class="content">
+	<script>
+
+		//let session_user_ssn = sessionStorage.getItem(ssn);
+		var sess_val = sessionStorage.myValue;
+		console.log(sess_val);
+		function getConfirmation() {
+			var retVal = confirm("Do you want to logout ?");
+			console.log(sess_val);
+
+			if (retVal == true) {
+				//document.write ("User wants to logout!");
+				sessionStorage.removeItem('myValue');
+				// To remove all sessions 
+				sessionStorage.clear();
+				window.location.href = 'http://localhost:8080/Home.html';
+				return true;
+			} else {
+				//document.write ("User does not want to logout!");
+				window.location.href = 'http://localhost:8080/TcProfilePage.html';
+				return false;
+			}
+		}
+		fetch("http://localhost:8080/user/getbyID?id=" + sess_val, {method: 'GET'}).then(function (response) {
+			// response.json() returns a promise, use the same .then syntax to work with the results
+
+
+			response.json().then(function (user) {
+				// users is now our actual variable parsed from the json, so we can use it
+
+				// console.log(user.aircraft_id);
+				let first_name = user.first_name;
+				let middle_name = user.middle_name;
+				let last_name = user.last_name;
+				let emp_role = user.role;
+				let emp_dob = user.dob;
+
+				//console.log(user.password);
+				//console.log(user.emp_id);
+				//console.log(user.role);
+				document.getElementById("f_name").innerHTML = user.first_name;
+				document.getElementById("m_name").innerHTML = user.middle_name;
+				document.getElementById("l_name").innerHTML = user.last_name;
+				document.getElementById("e_dob").innerHTML = user.dob;
+				document.getElementById("e_role").innerHTML = user.role;
+
+			}
+			);
+
+		}).catch(err => console.error(err));
+
+
+
+
+
+
+	</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		.content {
+			max-width: 500px;
+			margin: auto;
+		}
+
+		.header-class {
+			background-color: gainsboro;
+			height: 80px;
+			color: blueviolet;
+			text-emphasis: 100px;
+			font-size: 35px;
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header-class">
+		<em><strong>ONLINE AIRPORT SYSTEM</strong></em>
+
+	</div>
+	<div class="content">
+		<h3>TECHNICIAN MAIN PAGE</h3>
+
+		<button onclick="window.location.href='http://localhost:8080/TechnicalProfilePage.html';"
+			type="button">Profile</button>
+		<input type="button" value="Logout" onclick="getConfirmation();" /><br>
+		<br>
+		<hr><br>
+
+		<h3> Add/Update Expertise</h3>
+		<form>
+			<p>
+				<label for="ssn">Employee SSN:</label>
+				<input type="number" id="ssn" name="ssn" value="" required><br>
+			</p>
+			<p>
+				<label for="aoe">Area of expertise:</label>
+				<input type="text" id="aoe" name="aoe" value=""><br>
+			</p>
+			<p>
+				<button id="aaoeb" type="button">Add Area of expertise</button>
+				<button id="uaoeb" type="button">Update Area of expertise</button><br><br><br>
+			</p>
+			<hr>
+			<br>
+			<h3>Add/Update Test details</h3>
+
+			<p>
+				<label for="tid">Test ID:</label>
+				<input type="number" id="tid" name="tid" value=""><br>
+			</p>
+			<p>
+				<label for="aid">Aircraft ID:</label>
+				<input type="number" id="aid" name="aid" value=""><br>
+			</p>
+			<p>
+				<label for="scr">Score:</label>
+				<input type="number" id="scr" name="scr" value="" max="100" min="0"><br>
+			</p>
+			<p>
+				<label for="dt">Date:</label>
+				<input type="date" id="dt" name="dt" value=""><br>
+			</p>
+			<p>
+				<label for="hrs">No of hours:</label>
+				<input type="number" id="hrs" name="hrs" value=""><br>
+			</p>
+			<p>
+
+				<button id="atdb" type="button">Add new test Details</button>
+				<button id="utdb" type="button">Update Existing Test details</button><br>
+
+		</form>
+
+	</div>
+	<script>
+		var sess_val = sessionStorage.myValue;
+		console.log(sess_val);
+		function getConfirmation() {
+			var retVal = confirm("Do you want to logout ?");
+			if (retVal == true) {
+				//document.write ("User wants to logout!");
+				sessionStorage.removeItem('myValue');
+				// To remove all sessions 
+				sessionStorage.clear();
+				window.location.href = 'http://localhost:8080/Home.html';
+				return true;
+			} else {
+				//document.write ("User does not want to logout!");
+				window.location.href = 'http://localhost:8080/TechnicalMainPage.html';
+				return false;
+			}
+		}
+		document.getElementById("aaoeb").onclick = function () {
+
+			let ssn_ = document.getElementById("ssn").value;
+			let aaoe_ = document.getElementById("aoe").value;
+
+			fetch("http://localhost:8080/tech/add?ssn=" + ssn_ + "&AreaOfX=" + aaoe_, {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+				},
+				body: {
+
+				}
+			})
+				.then(response => {
+					console.log(response)
+				})
+				.catch(err => {
+					console.log(err)
+				});
+		}
+
+		document.getElementById("atdb").onclick = function () {
+
+			let tid_ = document.getElementById("tid").value;
+			let aid_ = document.getElementById("aid").value;
+			let scr_ = document.getElementById("scr").value;
+			let dt_ = document.getElementById("dt").value;
+			let hrs_ = document.getElementById("hrs").value;
+
+			fetch("http://localhost:8080/faa/add?test_id=" + tid_ + "&aircraft_id=" + aid_ + "&score=" + scr_ + "&date=" + dt_ + "&no_of_hours=" + hrs_, {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+				},
+				body: {
+
+				}
+			})
+				.then(response => {
+					console.log(response)
+				})
+				.catch(err => {
+					console.log(err)
+				});
+		}
+
+		document.getElementById("utdb").onclick = function () {
+
+			let tid_ = document.getElementById("tid").value;
+			let aid_ = document.getElementById("aid").value;
+			let scr_ = document.getElementById("scr").value;
+			let dt_ = document.getElementById("dt").value;
+			let hrs_ = document.getElementById("hrs").value;
+
+			fetch("http://localhost:8080/faa/update?test_id=" + tid_ + "&aircraft_id=" + aid_ + "&score=" + scr_ + "&date=" + dt_ + "&no_of_hours=" + hrs_, {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+				},
+				body: {
+
+				}
+			})
+				.then(response => {
+					console.log(response)
+				})
+				.catch(err => {
+					console.log(err)
+				});
+		}
+
+
+		document.getElementById("uaoeb").onclick = function () {
+
+			let ssn_ = document.getElementById("ssn").value;
+			let aaoe_ = document.getElementById("aoe").value;
+
+			fetch("http://localhost:8080/tech/update?ssn=" + ssn_ + "&AreaOfX=" + aaoe_, {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+				},
+				body: {
+
+				}
+			})
+				.then(response => {
+					console.log(response)
+				})
+				.catch(err => {
+					console.log(err)
+				});
+		}
+
+	</script>
+
+
+</body>
+
+</html>

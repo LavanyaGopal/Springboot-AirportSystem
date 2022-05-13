@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+
+	<head>
+		<style>
+			.content {
+				max-width: 500px;
+				margin: auto;
+			}
+
+			.header-class {
+				background-color: gainsboro;
+				height: 80px;
+				color: blueviolet;
+				text-emphasis: 100px;
+				font-size: 35px;
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-class">
+			<em><strong>ONLINE AIRPORT SYSTEM</strong></em>
+
+		</div>
+		<div class="content">
+			<h3>TRAFFIC CONTROLLER MAIN PAGE</h3>
+
+			<button onclick="window.location.href='http://localhost:8080/TcProfilePage.html';"
+				type="button">Profile</button>
+			<input type="button" value="Logout" onclick="getConfirmation();" /><br>
+			<br>
+			<hr><br>
+
+
+			<h3> Add/Update Medical Exam details</h3>
+			<form>
+				<p>
+					<label for="ssn">Employee SSN:</label>
+					<input type="number" id="ssn" name="ssn" value="" required><br>
+				</p>
+				<p>
+					<label for="md">Med_date:</label>
+					<input type="text" id="md" name="md" value=""><br>
+				</p>
+				<p>
+					<label for="status">Status:</label>
+					<input type="text" id="status" name="status" value=""><br>
+				</p>
+				<p>
+					<button id="ame" type="button">Add Medical exam</button><br><br>
+				</p>
+				<hr>
+				<br>
+
+			</form>
+
+		</div>
+		<script>
+			var sess_val = sessionStorage.myValue;
+			console.log(sess_val);
+			function getConfirmation() {
+				var retVal = confirm("Do you want to logout ?");
+				if (retVal == true) {
+					//document.write ("User wants to logout!");
+					sessionStorage.removeItem('myValue');
+					// To remove all sessions 
+					sessionStorage.clear();
+					window.location.href = 'http://localhost:8080/Home.html';
+					return true;
+				} else {
+					//document.write ("User does not want to logout!");
+					window.location.href = 'http://localhost:8080/tc.html';
+					return false;
+				}
+			}
+			document.getElementById("ame").onclick = function () {
+
+				let ssn = document.getElementById("ssn").value;
+				let md = document.getElementById("md").value;
+				let status = document.getElementById("status").value;
+
+				fetch("http://localhost:8080/tc/add?ssn=" + ssn + "&med_date=" + md + "&status=" + status, {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+					},
+					body: {
+
+					}
+				})
+					.then(response => {
+						console.log(response)
+					})
+					.catch(err => {
+						console.log(err)
+					});
+			}
+
+		</script>
+
+
+	</body>
+
+</html>

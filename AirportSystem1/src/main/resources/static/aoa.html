@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		.content {
+			max-width: 500px;
+			margin: auto;
+		}
+
+		.header-class {
+			background-color: gainsboro;
+			height: 80px;
+			color: blueviolet;
+			text-emphasis: 100px;
+			font-size: 35px;
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header-class">
+		<em><strong>ONLINE AIRPORT SYSTEM</strong></em>
+
+	</div>
+	<div class="content">
+		<h2>Airport Operations Authority - Main page</h2>
+
+		<button onclick="window.location.href='http://localhost:8080/aoa.html';">Home</button>
+		<input type="button" value="Logout" onclick="getConfirmation();" /><br>
+		<br>
+		<hr><br>
+		<p>
+		<h3>View all Aircrafts</h3>
+		<button id="getAllaircrafts">View all Aircraft details</button><br><br>
+
+		<div class="d-flex justify-content-center">
+			<!-- table for showing data POST: http://192.168.1.9:8080/aircraft/add?aircraft_Id=222888&mId=2&flight_status=repair&airline_id=222
+-->
+			<table id="aircraftList"></table>
+
+			</p>
+			<hr>
+			<div>
+				<p>
+				<h3>Add/Update Aircraft details</h3>
+				</p>
+				<p>
+					<label for="air_id">Aircraft ID::</label>
+					<input type="text" id="air_id" name="air_id"><br>
+				</p>
+				<p>
+
+					<label for="m_id">Model Id:</label>
+					<input type="text" id="m_id" name="m_id"><br>
+				</p>
+				<p>
+					<label for="flight_status">Flight Status:</label>
+					<input type="text" id="flight_status" name="flight_status"><br>
+				</p>
+				<p>
+					<label for="Airline_ID">Airline ID:</label>
+					<input type="text" id="Airline_ID" name="Airline_ID"><br><br>
+				</p>
+				<p>
+					<button id="AAD" type="button">Add Aircraft Details</button>
+					<button id="UAD" type="button">Update Aircraft details</button><br><br>
+				</p>
+			</div>
+			<hr>
+			<div>
+				<h3>View all Model details </h3>
+				<button id="VAMD" type="button">View all model details</button><br><br>
+				<table id="modelList"></table>
+			</div>
+			<hr>
+			<div>
+				<h3>Add Gates </h3>
+				<p>
+					<label for="airl_id">Airline ID::</label>
+					<input type="text" id="airl_id" name="air_id"><br>
+				</p>
+				<p>
+					<label for="g_id">Gate Id:</label>
+					<input type="text" id="g_id" name="g_id"><br>
+				</p>
+				<button id="AG" type="button">Assign Gates</button>
+			</div>
+			<hr>
+			<div>
+				<h3>Get all Airlines</h3>
+				<button id="GAG" type="button">Get Airline</button><br><br>
+				<table id="AirlineList"></table>
+			</div>
+			<hr>
+			<div>
+				<h3>Get specific test detail</h3>
+				<p>
+					<label for="FAA_id">Test ID:</label>
+					<input type="text" id="FAA_id" name="FAA_id"><br>
+				</p>
+				<button id="FAA_tab" type="button">Get Faa test</button><br><br>
+				<table id="FAA_details"></table>
+			</div>
+			<hr>
+
+			<div>
+				<h3>Get all test details above the score entered</h3>
+				<p>
+					<label for="lname">Enter Test Score:</label><br>
+				</p>
+				<p>
+					<input type="text" id="test_score" name="test_score" value="" required><br><br>
+				</p>
+
+				<button id="get_tests_score">Get test details >= score</button><br><br>
+				<table id="FAA_details_aboveScore"></table>
+
+			</div>
+			<!-- <button onclick="window.location.href='https://';">View all model details</button><br><br>
+	<button onclick="window.location.href='https://';">Request gates</button><br><br>
+	<button onclick="window.location.href='https://';">Fetch FAA Test details</button> -->
+
+		</div>
+		<script>
+			var sess_val = sessionStorage.myValue;
+			console.log(sess_val);
+
+			function getConfirmation() {
+				var retVal = confirm("Do you want to logout ?");
+				if (retVal == true) {
+					//document.write ("User wants to logout!");
+					sessionStorage.removeItem('myValue');
+					// To remove all sessions 
+					sessionStorage.clear();
+					window.location.href = 'http://localhost:8080/Home.html';
+					return true;
+				} else {
+					//document.write ("User does not want to logout!");
+					window.location.href = 'http://localhost:8080/aoa.html';
+					return false;
+				}
+			}
+			document.getElementById("getAllaircrafts").addEventListener("click", function () {test1()});
+
+			function test1() {
+
+				fetch('http://localhost:8080/aircraft/all').then(function (response) {
+					// response.json() returns a promise, use the same .then syntax to work with the results
+					let val = " ";
+					let tab =
+						`<tr>
+          <th>aircraft_id</th>
+          <th>model_id</th>
+          <th>flight_status</th>
+          <th>airline_id</th>
+         </tr>`;
+					response.json().then(function (users) {
+						// users is now our actual variable parsed from the json, so we can use it
+
+						users.forEach(function (user) {
+
+							console.log(user.aircraft_id);
+							let aircraft_id = user.aircraft_id;
+							let model_id = user.model_id;
+							let flight_status = user.flight_status;
+							let airline_id = user.airline_id;
+							//							val += aircraft_id;
+							// Loop to access all rows 
+							tab += `<tr> 
+    <td>${aircraft_id}</td>
+    <td>${model_id}</td>
+    <td>${flight_status}</td> 
+    <td>${airline_id}</td>          
+	</tr>`;
+
+							// Setting innerHTML as tab variable
+							document.getElementById("aircraftList").innerHTML = tab;
+						});
+					}
+					);
+					document.getElementById("aircraftList").innerHTML = tab;
+
+				}).catch(err => console.error(err));
+
+			}
+			document.getElementById("AAD").onclick = function () {
+
+				let air_id = document.getElementById("air_id").value;
+				let m_id = document.getElementById("m_id").value;
+				let flight_status = document.getElementById("flight_status").value;
+				let Airline_ID = document.getElementById("Airline_ID").value;
+
+				fetch("http://localhost:8080/aircraft/add?aircraft_Id=" + air_id + "&mId=" + m_id + "&flight_status=" + flight_status + "&airline_id=" + Airline_ID, {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+					},
+					body: {
+
+					}
+				})
+					.then(response => {
+						console.log(response)
+					})
+					.catch(err => {
+						console.log(err)
+					});
+			}
+			document.getElementById("UAD").onclick = function () {
+
+				let air_id = document.getElementById("air_id").value;
+				let m_id = document.getElementById("m_id").value;
+				let flight_status = document.getElementById("flight_status").value;
+				let Airline_ID = document.getElementById("Airline_ID").value;
+
+				fetch("http://localhost:8080/aircraft/update?aircraft_Id=" + air_id + "&mId=" + m_id + "&flight_status=" + flight_status + "&airline_id=" + Airline_ID, {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+					},
+					body: {
+
+					}
+				})
+					.then(response => {
+						console.log(response)
+					})
+					.catch(err => {
+						console.log(err)
+					});
+			}
+			document.getElementById("VAMD").addEventListener("click", function () {test2()});
+
+			function test2() {
+
+				fetch('http://localhost:8080/model/all').then(function (response) {
+					// response.json() returns a promise, use the same .then syntax to work with the results
+					let val = " ";
+					let tab =
+						`<tr>
+          <th>Model ID</th>
+          <th>Weight</th>
+          <th>Capicity</th>
+         </tr>`;
+					response.json().then(function (users) {
+						// users is now our actual variable parsed from the json, so we can use it
+
+						users.forEach(function (user) {
+
+							//console.log(user.aircraft_id);
+							let m_id = user.mId;
+							let weight = user.weight;
+							let capacity = user.capacity;
+							// let airline_id = user.airline_id;
+							//val += aircraft_id;
+							// Loop to access all rows 
+							tab += `<tr> 
+    <td>${m_id}</td>
+    <td>${weight}</td>
+    <td>${capacity}</td>         
+	</tr>`;
+
+							// Setting innerHTML as tab variable
+							document.getElementById("modelList").innerHTML = tab;
+						});
+					}
+					);
+					document.getElementById("modelList").innerHTML = tab;
+
+				}).catch(err => console.error(err));
+
+			}
+			document.getElementById("AG").onclick = function () {
+
+				let airl_id = document.getElementById("airl_id").value;
+				let g_id = document.getElementById("g_id").value;
+				// http://192.168.1.9:8080/gates/add?airline_id=333&gate_id=5555
+				fetch("http://localhost:8080/gates/add?airline_id=" + airl_id + "&gate_id=" + g_id, {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+					},
+					body: {
+
+					}
+				})
+					.then(response => {
+						console.log(response)
+					})
+					.catch(err => {
+						console.log(err)
+					});
+			}
+			document.getElementById("GAG").addEventListener("click", function () {test3()});
+
+			function test3() {
+
+				fetch('http://localhost:8080/gates/all').then(function (response) {
+					// response.json() returns a promise, use the same .then syntax to work with the results
+					let val = " ";
+					let tab =
+						`<tr>
+          <th>Airline ID</th>
+          <th>Gate ID</th>
+         </tr>`;
+					response.json().then(function (users) {
+						// users is now our actual variable parsed from the json, so we can use it
+
+						users.forEach(function (user) {
+
+							console.log(user.aircraft_id);
+							let airl_id = user.airline_id;
+							let gate_id = user.gate_id;
+							//val += aircraft_id;
+							// Loop to access all rows 
+							tab += `<tr> 
+    <td>${airl_id}</td>
+    <td>${gate_id}</td>         
+	</tr>`;
+
+							// Setting innerHTML as tab variable
+							document.getElementById("AirlineList").innerHTML = tab;
+						});
+					}
+					);
+					document.getElementById("AirlineList").innerHTML = tab;
+
+				}).catch(err => console.error(err));
+
+			}
+			document.getElementById("FAA_tab").addEventListener("click", function () {test4_2()});
+
+
+			function test4_2() {
+				let test_id = document.getElementById("FAA_id").value;
+				fetch("http://localhost:8080/faa/getByID?test_id=" + test_id, {method: 'GET'}).then(function (response) {
+					// response.json() returns a promise, use the same .then syntax to work with the results
+					let val = " ";
+					let tab =
+						`<tr>
+				<th>Test ID</th>
+				<th>Aircraft ID</th>
+				<th>Score</th>
+				<th>Date</th>
+				<th>Number_of_Hrs</th>
+				</tr>`;
+					response.json().then(function (user) {
+						// users is now our actual variable parsed from the json, so we can use it
+
+						// console.log(user.aircraft_id);
+						let testid = user.test_id;
+						let aircraftid = user.aircraft_id;
+						let score = user.score;
+						let date = user.date;
+						let num_hrs = user.no_of_hours;
+
+						//val += aircraft_id;
+						// Loop to access all rows 
+						tab += `<tr> 
+		<td>${testid}</td>
+		<td>${aircraftid}</td>
+		<td>${score}</td>
+		<td>${date}</td>
+		<td>${num_hrs}</td>         
+		</tr>`;
+
+						// Setting innerHTML as tab variable
+						document.getElementById("FAA_details").innerHTML = tab;
+
+					}
+					);
+					document.getElementById("FAA_details").innerHTML = tab;
+
+				}).catch(err => console.error(err));
+			}
+
+
+			//document.getElementById("GetTestDetail").addEventListener("click", function () {test5()});
+
+			document.getElementById("get_tests_score").addEventListener("click", function () {test5_2()});
+
+			// http://192.168.1.9:8080/faa/allAboveThr?score=90
+			function test5_2() {
+				let score_ = document.getElementById("test_score").value;
+				fetch("http://localhost:8080/faa/allAboveThr?score=" + score_, {method: 'GET'}).then(function (response) {
+					// response.json() returns a promise, use the same .then syntax to work with the results
+					let val = " ";
+					let tab =
+						`<tr>
+				<th>Test ID</th>
+				<th>Aircraft ID</th>
+				<th>Score</th>
+				<th>Date</th>
+				<th>Number_of_Hrs</th>
+				</tr>`;
+					response.json().then(function (users) {
+						// users is now our actual variable parsed from the json, so we can use it
+
+
+						users.forEach(function (user) {
+							// console.log(user.aircraft_id);
+							let testid = user.test_id;
+							let aircraftid = user.aircraft_id;
+							let score = user.score;
+							let date = user.date;
+							let num_hrs = user.no_of_hours;
+
+							//val += aircraft_id;
+							// Loop to access all rows 
+							tab += `<tr> 
+		<td>${testid}</td>
+		<td>${aircraftid}</td>
+		<td>${score}</td>
+		<td>${date}</td>
+		<td>${num_hrs}</td>         
+		</tr>`;
+
+							// Setting innerHTML as tab variable
+							document.getElementById("FAA_details_aboveScore").innerHTML = tab;
+						});
+					}
+					);
+					document.getElementById("FAA_details_aboveScore").innerHTML = tab;
+
+				}).catch(err => console.error(err));
+			}
+		</script>
+</body>
+
+</html>

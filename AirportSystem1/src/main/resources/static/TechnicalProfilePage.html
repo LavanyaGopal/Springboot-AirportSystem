@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		.content {
+			max-width: 500px;
+			margin: auto;
+		}
+
+		.header-class {
+			background-color: gainsboro;
+			height: 80px;
+			color: blueviolet;
+			text-emphasis: 100px;
+			font-size: 35px;
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header-class">
+		<em><strong>ONLINE AIRPORT SYSTEM</strong></em>
+
+	</div>
+	<div class="content">
+		<h3>TECHNICIAN PROFILE PAGE</h3>
+
+		<div>
+			<br>
+			<button onclick="window.location.href='http://localhost:8080/TechnicalMainPage.html';"
+				type="button">Home</button>
+			<input type="button" value="Logout" onclick="getConfirmation();" /><br>
+			<br>
+			<hr><br>
+
+			<h2>My Profile</h2>
+
+			<h3>First Name: <span id="f_name"></span id="f_name"> </h3>
+			<h3>Middle Name: <span id="m_name"></span></h3>
+			<h3>Last Name: <span id="l_name"></span></h3>
+
+			<h3>DOB: <span id="e_dob"></span></h3>
+			<h3>Role: <span id="e_role"></span></h3>
+
+		</div>
+		<hr>
+
+		<form>
+			<h4>Add new Address</h4>
+			<p>
+				<label for="SSN_addr">SSN:</label>
+				<input type="text" id="SSN_addr" name="SSN_addr"><br>
+			</p>
+			<p>
+				<label for="Address1">Address1:</label>
+				<input type="text" id="Address1" name="Address1"><br>
+			</p>
+			<p>
+				<label for="Address2">Address2:</label>
+				<input type="text" id="Address2" name="Address2"><br>
+			</p>
+			<p>
+				<label for="City">City:</label>
+				<input type="text" id="City" name="City"><br>
+			</p>
+			<p>
+				<label for="State">State:</label>
+				<input type="text" id="State" name="State"><br>
+			</p>
+			<p>
+				<label for="Pincode">Pincode:</label>
+				<input type="text" id="Pincode" name="Pincode"><br>
+			</p>
+			<button id="Add Address" type="button">Add new Address</button><br><br>
+
+			<hr>
+
+			<h4> Add new Phone number</h4>
+			<p><label for="SSN_ph">SSN:</label>
+				<input type="text" id="SSN_ph" name="SSN_ph"><br>
+			</p>
+			<p><label for="Phone Number">Phone Number:</label>
+				<input type="text" id="Phone Number" name="Phone Number"><br>
+			</p>
+
+			<button id="Add phoneNumber" type="button">Add New phoneNumber</button>
+
+		</form>
+
+	</div class="content">
+	<script>
+
+
+		window.onload = function () {
+			var sess_val = sessionStorage.myValue;
+			console.log(sess_val);
+
+
+
+			fetch("http://localhost:8080/user/getbyID?id=" + sess_val, {method: 'GET'}).then(function (response) {
+				// response.json() returns a promise, use the same .then syntax to work with the results
+
+
+				response.json().then(function (user) {
+					// users is now our actual variable parsed from the json, so we can use it
+
+					// console.log(user.aircraft_id);
+					let first_name = user.first_name;
+					let middle_name = user.middle_name;
+					let last_name = user.last_name;
+					let emp_role = user.role;
+					let emp_dob = user.dob;
+
+					//console.log(user.password);
+					//console.log(user.emp_id);
+					//console.log(user.role);
+					document.getElementById("f_name").innerHTML = user.first_name;
+					document.getElementById("m_name").innerHTML = user.middle_name;
+					document.getElementById("l_name").innerHTML = user.last_name;
+					document.getElementById("e_dob").innerHTML = user.dob;
+					document.getElementById("e_role").innerHTML = user.role;
+
+				}
+				);
+
+			}).catch(err => console.error(err));
+
+
+
+			// http://192.168.1.9:8080/empA/getByID?ssn=987698761
+
+
+
+			fetch("http://localhost:8080/empA/getByID?ssn=" + sess_val, {method: 'GET'}).then(function (response) {
+				// response.json() returns a promise, use the same .then syntax to work with the results
+
+				let add_val = "";
+				response.json().then(function (users) {
+
+
+
+					users.forEach(function (user) {
+						// console.log(user.air craft_id);
+						//let testid = user.test_id;
+						//let aircraftid = user.aircraft_id;
+						//let score = user.score;
+						//let date = user.date;
+						//let num_hrs = user.no_of_hours;
+
+						//val += aircraft_id;
+						// Loop to access all rows 
+						console.log(user);
+						console.log(user.address_line1);
+						add_val += user;
+
+					});
+					document.getElementById("addres").innerHTML = add_val;
+				}
+				);
+
+
+			}).catch(err => console.error(err));
+		}
+
+
+		function getConfirmation() {
+			var retVal = confirm("Do you want to logout ?");
+			if (retVal == true) {
+				//document.write ("User wants to logout!");
+				sessionStorage.removeItem('myValue');
+				// To remove all sessions 
+				sessionStorage.clear();
+				window.location.href = 'http://localhost:8080/Home.html';
+				return true;
+			} else {
+				//document.write ("User does not want to logout!");
+				window.location.href = 'http://localhost:8080/TechnicalProfilePage.html';
+				return false;
+			}
+		}
+
+		document.getElementById("Add Address").onclick = function () {
+
+			let ssn_addr_1 = document.getElementById("SSN_addr").value;
+			let Address1 = document.getElementById("Address1").value;
+			let Address2 = document.getElementById("Address2").value;
+			let City = document.getElementById("City").value;
+			let State = document.getElementById("State").value;
+			let Pincode = document.getElementById("Pincode").value;
+			let ssn_ph = document.getElementById("SSN_ph").value;
+			let phno = document.getElementById("Phone Number").value;
+
+			pincode = 75252
+
+			fetch("http://localhost:8080/empA/add?ssn=" + ssn_addr_1 + "&address_line1=" + Address1 + "&address_line2=" + Address2 + "&city=" + City + "&state=" + State + "&pincode=" + Pincode, {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+				},
+				body: {
+
+				}
+			})
+				.then(response => {
+					console.log(response)
+				})
+				.catch(err => {
+					console.log(err)
+				});
+		}
+		document.getElementById("Add phoneNumber").onclick = function () {
+			let ssn_ph = document.getElementById("SSN_ph").value;
+			let phno = document.getElementById("Phone Number").value;
+
+			pincode = 75252
+
+			fetch("http://localhost:8080/empC/add?ssn=" + ssn_ph + "&phone_no=" + phno, {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+				},
+				body: {
+
+				}
+			})
+				.then(response => {
+					console.log(response)
+				})
+				.catch(err => {
+					console.log(err)
+				});
+		}
+
+	</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+
+	<style>
+		.header-class {
+			background-color: gainsboro;
+			height: 80px;
+			color: blueviolet;
+			text-emphasis: 100px;
+			font-size: 35px;
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header-class">
+		<em><strong>ONLINE AIRPORT SYSTEM</strong></em>
+
+	</div>
+	<div>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<h1>SignUp Page</h1>
+
+				<!-- if we dont mention the action for form, upon click on the submit it will redirect to the same page -->
+				<form id="myForm">
+
+					<div class="form-group">
+						<p>
+							<label for="First Name">First Name:</label>
+							<input type="text" id="First Name" name="First Name" required><br>
+						</p>
+					</div>
+					<div>
+						<p>
+							<label for="Middle Name">Middle Name:</label>
+							<input type="text" id="Middle Name" name="Middle Name"><br>
+						</p>
+					</div>
+					<div>
+						<p>
+							<label for="Last Name">Last Name:</label>
+							<input type="text" id="Last Name" name="Last Name" required><br>
+						</p>
+					</div>
+					<div>
+						<p>
+							<label for="Employee ID">Employee ID:</label>
+							<input type="text" id="Employee ID" name="Employee ID" required><br>
+						</p>
+					</div>
+					<div>
+						<p>
+							<label for="role">Role:</label>
+							<input type="text" id="role" name="role" required><br>
+						</p>
+					</div>
+					<div>
+						<p>
+							<label for="DOB">Date of Birth (YYYY-MM-DD):</label>
+							<input type="text" id="DOB" name="DOB" required><br>
+						</p>
+					</div>
+					<div>
+						<p>
+							<label for="pwd">Password:</label>
+							<input type="password" id="pwd" name="pwd" required><br>
+						</p>
+					</div>
+					<div>
+						<p>
+							<label for="cpwd">Confirm Password:</label>
+							<input type="password" id="cpwd" name="cpwd" required><br>
+						</p>
+					</div>
+
+
+
+					<div class="form-group form-check">
+						<p>
+							<input type="checkbox" class="form-check-input" id="notrobot" required="required">
+							I am not a robot<br>
+						</p>
+					</div>
+
+					<input type="submit" class="btn btn-warning" value="Submit" id="SSP">
+					</input> Already have an account?<a href="http://localhost:8080/Home.html"> Login</a>
+					<!--<input type="submit" class="btn btn-warning" value="Submit"> -->
+
+				</form>
+
+
+			</div>
+			<div class="col-md-3"></div>
+		</div>
+	</div>
+
+
+	<script>
+		window.onload = function () {
+			//document.getElementById("btn1").onclick = validate;
+
+			document.getElementById("myForm").addEventListener("submit", (e) => {
+
+				var getSelectedValue = document.querySelector(
+					'input[name="role"]:checked');
+
+
+
+
+				if (document.getElementById("First Name").value == "") {
+					alert("First Name is required");
+					e.preventDefault;
+					//   e.preventDefault prevents default behaviour of form submission if this condition is met. 
+				}
+				if (document.getElementById("Middle Name").value == "") {
+					alert("Middle Name is required");
+					e.preventDefault;
+					//   e.preventDefault prevents default behaviour of form submission if this condition is met. 
+				}
+				if (document.getElementById("Last Name").value == "") {
+					alert("Last Name is required");
+					e.preventDefault;
+					//   e.preventDefault prevents default behaviour of form submission if this condition is met. 
+				}
+				if (document.getElementById("Employee ID").value == "") {
+					alert("Employee ID is required");
+					e.preventDefault;
+					//   e.preventDefault prevents default behaviour of form submission if this condition is met. 
+				}
+				if (document.getElementById("role").value == "") {
+					alert("role is required");
+					e.preventDefault;
+					//   e.preventDefault prevents default behaviour of form submission if this condition is met. 
+				}
+				if (document.getElementById("DOB").value == "") {
+					alert("DOB is required");
+					e.preventDefault;
+					//   e.preventDefault prevents default behaviour of form submission if this condition is met. 
+				}
+				if (document.getElementById("pwd").value == "") {
+					alert("Password is required");
+					e.preventDefault;
+				}
+				if (document.getElementById("cpwd").value == "") {
+					alert("Confirm Password is required");
+					e.preventDefault;
+				}
+				if (document.getElementById("pwd").value != document.getElementById("cpwd").value) {
+					alert("Password and Confirm password should be same");
+					e.preventDefault;
+				}
+				if (!document.getElementById("notrobot").checked) {
+					alert("Please verify you are not a robot");
+					e.preventDefault;
+				}
+
+				let fname = document.getElementById("First Name").value;
+				let mname = document.getElementById("Middle Name").value;
+				let lname = document.getElementById("Last Name").value;
+				let empid = document.getElementById("Employee ID").value;
+				let role = document.getElementById("role").value;
+				let dob = document.getElementById("DOB").value;
+				let passw = document.getElementById("pwd").value;
+				fetch("http://localhost:8080/user/add?first_name=" + fname + "&middle_name=" + mname + "&last_name=" + lname + "&emp_id=" + empid + "&role=" + role + "&DOB=" + dob + "&password=" + passw, {
+					method: 'POST',
+					headers: {
+						'content-type': 'application/json',
+					},
+					body: {
+
+					}
+					
+				}
+				)
+				
+					.then(response => {
+						console.log(response)
+						window.location.href = 'http://localhost:8080/Home.html';
+					})
+					.catch(err => {
+						console.log(err)
+					});
+					window.location.href = 'http://localhost:8080/Home.html';
+			});
+		}
+
+
+	</script>
+
+
+</body>
+
+</html>
